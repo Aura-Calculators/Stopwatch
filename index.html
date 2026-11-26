@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Stopwatch — Free Precision Timer, Lap Splits, Countdown &amp; HIIT Intervals</title>
+  <meta name="description" content="Free, instant online stopwatch and precision timer with drift-free timestamp accuracy, unlimited lap splits, CSV export, Pomodoro countdown presets, HIIT interval rounds, and keyboard shortcuts." />
+  <meta name="keywords" content="online stopwatch, precision timer, split timer, lap timer, HIIT interval timer, countdown timer, pomodoro timer, browser stopwatch, free timer with laps" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://Stopwatch-TIMER.example.com/" />
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Online Stopwatch — Free Precision Timer, Lap Splits &amp; HIIT Intervals" />
+  <meta property="og:description" content="Drift-free browser chronometer with split telemetry, millisecond/centisecond resolution, countdown presets, HIIT intervals, and CSV export." />
+  <meta property="og:site_name" content="Stopwatch / TIMER" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stopwatch / TIMER — Precision Online Stopwatch &amp; Timer" />
+  <meta name="twitter:description" content="Zero-latency, drift-compensated online stopwatch, split analyzer, countdown timer, and HIIT round tracker." />
+
+  <!-- Google Analytics (GA4) Placeholder — Replace G-XXXXXXXXXX with your Measurement ID -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            carbon: {
+              950: '#07080c',
+              900: '#0c0e15',
+              850: '#0e111b',
+              800: '#141826',
+              700: '#1e2436',
+            },
+            ice: {
+              50: '#f4f6fb',
+              200: '#d7deec',
+              400: '#98a1b3',
+              500: '#6b7589',
+            },
+            cyanpulse: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            },
+            coralpulse: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Structured Data: WebApplication + FAQPage JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Stopwatch / TIMER — Online Stopwatch & Precision Timer",
+        "url": "https://Stopwatch-TIMER.example.com/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Web Browser)",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Drift-compensated timestamp stopwatch",
+          "Unlimited lap and cumulative split telemetry",
+          "Centisecond, millisecond, and whole-second resolution filters",
+          "Customizable countdown timer with quick presets",
+          "HIIT and interval round timer",
+          "CSV and plain text export",
+          "Local browser session archive",
+          "Keyboard shortcuts (Space, L, R)"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Does this online stopwatch stay accurate if I switch browser tabs or minimize the window?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Stopwatch / TIMER uses high-resolution monotonic timestamp delta math (performance.now() anchored to Date.now()) rather than counting frame intervals. Even if a browser throttles background tabs, the exact elapsed time is recalculated instantaneously the moment you return."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between Lap Time and Split Time?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Lap Time measures the duration of an individual segment from the previous checkpoint to the current checkpoint. Split Time (Overall Elapsed) measures the cumulative time elapsed from the very start of the session up to that checkpoint."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What keyboard shortcuts are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Press Spacebar to Start or Pause the active timer, L to record a Lap or Split (or skip interval phase), and R to Reset the timer. Shortcuts automatically pause while you type inside a lap note or time input field."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I export my stopwatch laps to Excel or Google Sheets?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Click Export CSV to download a clean comma-separated values file containing lap numbers, labels, lap durations, cumulative splits, and delta comparisons ready for Excel, Google Sheets, or Notion."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the timer work offline once loaded?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. All timing math, Web Audio synthesis, lap filtering, and session storage execute 100% locally inside your browser with zero server round-trips."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-void: #07080c;
+      --bg-slate: #0c0e15;
+      --bg-card: #0e111b;
+      --border-hairline: rgba(244, 246, 251, 0.08);
+      --text-primary: #f4f6fb;
+      --text-secondary: #98a1b3;
+      --accent-cyan: #22d3ee;
+      --accent-coral: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(6, 182, 212, 0.09) 0%, transparent 38%),
+        radial-gradient(circle at 84% 18%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+        linear-gradient(180deg, #07080c 0%, #0c0e15 48%, #07080c 100%);
+    }
+
+    /* Tabular numerals guarantee zero horizontal jitter at 60fps */
+    .tabular-readout {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "zero" 1;
+    }
+
+    /* Subtle precision telemetry grid texture */
+    .telemetry-grid {
+      background-size: 36px 36px;
+      background-image:
+        linear-gradient(to right, rgba(244, 246, 251, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(244, 246, 251, 0.025) 1px, transparent 1px);
+    }
+
+    /* Glassmorphic precision cards */
+    .glass-panel {
+      background: rgba(14, 17, 27, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(244, 246, 251, 0.08);
+      box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.75);
+    }
+
+    .glass-panel-subtle {
+      background: rgba(14, 17, 27, 0.58);
+      border: 1px solid rgba(244, 246, 251, 0.07);
+    }
+
+    /* Chronometer Stage Radial Glow */
+    .chrono-ambient {
+      background:
+        radial-gradient(circle at 50% 45%, rgba(34, 211, 238, 0.14) 0%, rgba(249, 115, 22, 0.07) 42%, transparent 72%);
+    }
+
+    /* SVG Ring Transitions */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.08s linear, stroke 0.25s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07080c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e2436;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2f3852;
+    }
+
+    /* Policy-safe Ad Slot Container styling */
+    .ad-container-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+      padding: 0.75rem 0.5rem;
+    }
+
+    .ad-slot-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 760px;
+      border-radius: 0.875rem;
+      border: 1px dashed rgba(244, 246, 251, 0.11);
+      background: rgba(12, 14, 21, 0.65);
+    }
+
+    /* Accordion smooth toggle */
+    .faq-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.26s ease;
+    }
+    .faq-item[data-open="true"] .faq-content {
+      grid-template-rows: 1fr;
+    }
+    .faq-inner {
+      overflow: hidden;
+    }
+    .faq-item[data-open="true"] .faq-chevron {
+      transform: rotate(180deg);
+      color: #22d3ee;
+    }
+
+    /* Active pulse indicator */
+    @keyframes telemetryPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.88); }
+    }
+    .live-dot {
+      animation: telemetryPulse 1.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-cyan-400/25 selection:text-cyan-200">
+
+  <!-- Toast Notification Banner (Replaces alert/confirm) -->
+  <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+  <!-- Sticky Glassmorphic Navigation Header -->
+  <header class="sticky top-0 z-40 border-b border-ice-50/[0.08] bg-carbon-950/85 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- Brand Emblem: Stopwatch / TIMER -->
+      <a href="#top" class="flex items-center gap-3 group focus:outline-none">
+        <div class="relative w-10 h-10 rounded-xl bg-carbon-850 border border-ice-50/10 flex items-center justify-center shadow-inner group-hover:border-cyanpulse-400/50 transition-colors">
+          <!-- Custom Minimalist Chronograph Dial SVG -->
+          <svg class="w-6 h-6" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <circle cx="14" cy="15" r="9.5" stroke="#22d3ee" stroke-width="1.75" stroke-dasharray="45 15" />
+            <circle cx="14" cy="15" r="6" stroke="rgba(244,246,251,0.18)" stroke-width="1" />
+            <path d="M11.5 2.5H16.5" stroke="#f97316" stroke-width="2" stroke-linecap="round" />
+            <path d="M14 2.5V5.2" stroke="#f97316" stroke-width="1.75" stroke-linecap="round" />
+            <path d="M21 7.5L22.8 5.7" stroke="#22d3ee" stroke-width="1.75" stroke-linecap="round" />
+            <path d="M14 15L18.2 11.2" stroke="#f97316" stroke-width="2" stroke-linecap="round" />
+            <circle cx="14" cy="15" r="1.6" fill="#f4f6fb" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-display font-bold tracking-tight text-base sm:text-lg text-ice-50">Stopwatch</span>
+            <span class="text-xs font-mono font-semibold px-1.5 py-0.5 rounded bg-cyanpulse-500/15 text-cyanpulse-400 border border-cyanpulse-400/25">TIMER</span>
+          </div>
+          <span class="text-[11px] text-ice-400 hidden sm:block tracking-wide">Online Stopwatch - Free Precision Timer</span>
+        </div>
+      </a>
+
+      <!-- Desktop Jump Links -->
+      <nav aria-label="Primary Navigation" class="hidden md:flex items-center gap-6 text-sm font-medium text-ice-400">
+        <a href="#workspace" class="hover:text-ice-50 transition-colors">Stopwatch</a>
+        <a href="#workspace" onclick="switchMode('countdown')" class="hover:text-ice-50 transition-colors">Modes &amp; Filters</a>
+        <a href="#lap-telemetry" class="hover:text-ice-50 transition-colors">Lap Telemetry</a>
+        <a href="#timing-guide" class="hover:text-ice-50 transition-colors">Timing Guide</a>
+        <a href="#faq" class="hover:text-ice-50 transition-colors">FAQ</a>
+      </nav>
+
+      <!-- Right Actions: Sound Toggle + Primary CTA -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <button id="audio-toggle-btn" type="button" aria-pressed="true" title="Toggle Web Audio Chimes"
+          class="p-2.5 rounded-xl bg-carbon-850 border border-ice-50/10 text-ice-200 hover:border-cyanpulse-400/40 hover:text-cyanpulse-400 transition-all flex items-center gap-1.5 text-xs font-medium">
+          <svg id="audio-icon-on" class="w-4 h-4 text-cyanpulse-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg id="audio-icon-off" class="w-4 h-4 text-ice-500 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <span id="audio-status-label" class="hidden sm:inline">Audio On</span>
+        </button>
+
+        <a href="#workspace"
+          class="px-4 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm bg-gradient-to-r from-cyanpulse-500 to-cyanpulse-400 text-carbon-950 hover:brightness-110 shadow-lg shadow-cyanpulse-500/20 transition-all">
+          Start Timing
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="telemetry-grid">
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative pt-10 pb-8 sm:pt-14 sm:pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-carbon-850/90 border border-ice-50/10 text-xs font-medium text-ice-200 mb-5">
+        <span class="w-2 h-2 rounded-full bg-cyanpulse-400 live-dot"></span>
+        <span>Zero-Latency Browser Chronometer • Monotonic Timestamp Engine</span>
+      </div>
+
+      <h1 class="font-display font-bold text-3xl sm:text-5xl lg:text-6xl tracking-tight text-ice-50 max-w-4xl mx-auto leading-[1.12]">
+        Precision online stopwatch &amp; split timer <span class="bg-gradient-to-r from-cyanpulse-400 via-ice-50 to-coralpulse-400 bg-clip-text text-transparent">built for speed</span>
+      </h1>
+
+      <p class="mt-4 sm:mt-5 text-base sm:text-lg text-ice-400 max-w-2xl mx-auto leading-relaxed">
+        Measure sprint splits, deep-focus blocks, countdowns, and HIIT intervals with drift-free <code class="font-mono text-xs text-cyanpulse-400 bg-carbon-850 px-1.5 py-0.5 rounded">performance.now()</code> accuracy, instant CSV exports, and tactile keyboard controls.
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center justify-center gap-3.5">
+        <a href="#workspace"
+          class="px-6 py-3.5 rounded-xl font-display font-bold text-sm sm:text-base bg-gradient-to-r from-cyanpulse-500 to-cyanpulse-400 text-carbon-950 hover:brightness-110 shadow-xl shadow-cyanpulse-500/20 transition-all flex items-center gap-2">
+          <span>Open Stopwatch</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a href="#timing-guide"
+          class="px-5 py-3.5 rounded-xl font-display font-semibold text-sm sm:text-base bg-carbon-850 border border-ice-50/10 text-ice-200 hover:border-ice-50/25 hover:text-ice-50 transition-all">
+          Explore Timing Guide
+        </a>
+      </div>
+
+      <!-- Trust Pills -->
+      <div class="mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs font-medium text-ice-400">
+        <span class="px-3 py-1.5 rounded-lg glass-panel-subtle flex items-center gap-1.5">
+          <span class="text-cyanpulse-400">✓</span> Drift-Free Accuracy
+        </span>
+        <span class="px-3 py-1.5 rounded-lg glass-panel-subtle flex items-center gap-1.5">
+          <span class="text-cyanpulse-400">✓</span> Lap Splits &amp; CSV Export
+        </span>
+        <span class="px-3 py-1.5 rounded-lg glass-panel-subtle flex items-center gap-1.5">
+          <span class="text-coralpulse-400">✓</span> Countdown &amp; HIIT Modes
+        </span>
+        <span class="px-3 py-1.5 rounded-lg glass-panel-subtle flex items-center gap-1.5">
+          <span class="text-coralpulse-400">✓</span> Keyboard Shortcuts
+        </span>
+      </div>
+    </section>
+
+    <!-- ADSTERRA SLOT 1: #ad-slot-top (Centered Leaderboard / Responsive Banner, CLS-safe) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-2">
+      <div class="ad-container-wrapper">
+        <span class="text-[10px] uppercase tracking-[0.2em] text-ice-500 mb-1.5 select-none">Advertisement</span>
+        <div id="ad-slot-top" class="ad-slot-box min-h-[90px] sm:min-h-[96px]">
+          <!-- =====================================================================
+               ADSTERRA TOP LEADERBOARD SLOT (728x90 Desktop / 320x50 Mobile)
+               Paste your Adsterra Asynchronous / Banner <script> tag directly below.
+               ===================================================================== -->
+          <div class="text-xs font-mono text-ice-500/60 py-4 px-3 text-center">
+            Responsive Display Slot • 728×90 / 320×50
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. INTERACTIVE STOPWATCH, COUNTDOWN & INTERVAL WORKSPACE -->
+    <section id="workspace" class="py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="glass-panel rounded-3xl p-4 sm:p-7 lg:p-8 relative overflow-hidden">
+        <!-- Ambient Radial Glow Behind Chronometer Stage -->
+        <div class="chrono-ambient absolute inset-0 pointer-events-none"></div>
+
+        <!-- Top Control Header: Mode Tabs + Precision Display Filter -->
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-ice-50/[0.08]">
+          <!-- Multi-Mode Timing Tabs -->
+          <div role="tablist" aria-label="Timer Modes" class="grid grid-cols-3 sm:inline-flex p-1.5 rounded-2xl bg-carbon-950/90 border border-ice-50/[0.08] gap-1">
+            <button id="tab-stopwatch" role="tab" aria-selected="true" onclick="switchMode('stopwatch')"
+              class="mode-tab px-3.5 sm:px-5 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm transition-all bg-cyanpulse-500 text-carbon-950 shadow-md">
+              Stopwatch &amp; Laps
+            </button>
+            <button id="tab-countdown" role="tab" aria-selected="false" onclick="switchMode('countdown')"
+              class="mode-tab px-3.5 sm:px-5 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm text-ice-400 hover:text-ice-50 transition-all">
+              Countdown Timer
+            </button>
+            <button id="tab-interval" role="tab" aria-selected="false" onclick="switchMode('interval')"
+              class="mode-tab px-3.5 sm:px-5 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm text-ice-400 hover:text-ice-50 transition-all">
+              HIIT / Intervals
+            </button>
+          </div>
+
+          <!-- Smart Filter: Time Precision Resolution -->
+          <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2.5">
+            <label for="precision-select" class="text-xs font-medium text-ice-400 uppercase tracking-wider">Resolution:</label>
+            <select id="precision-select" aria-label="Time Precision Resolution"
+              class="px-3.5 py-2 rounded-xl bg-carbon-950 border border-ice-50/15 text-xs sm:text-sm font-mono text-ice-50 focus:outline-none focus:border-cyanpulse-400 cursor-pointer">
+              <option value="centi" selected>Centiseconds (.cc — 1/100s)</option>
+              <option value="milli">Milliseconds (.mmm — 1/1000s)</option>
+              <option value="seconds">Whole Seconds (Clean)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mode-Specific Setup Panels (Countdown Presets & HIIT Config) -->
+        <!-- Countdown Configuration Bar -->
+        <div id="panel-countdown-config" class="relative z-10 hidden mt-6 p-4 sm:p-5 rounded-2xl bg-carbon-950/75 border border-ice-50/[0.08]">
+          <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <!-- Quick Presets -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-ice-400 mr-1">Presets:</span>
+              <button type="button" onclick="applyCountdownPreset(60)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">1m</button>
+              <button type="button" onclick="applyCountdownPreset(300)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">5m</button>
+              <button type="button" onclick="applyCountdownPreset(600)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">10m</button>
+              <button type="button" onclick="applyCountdownPreset(900)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">15m</button>
+              <button type="button" onclick="applyCountdownPreset(1500)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-cyanpulse-500/15 text-cyanpulse-400 border border-cyanpulse-400/35 hover:bg-cyanpulse-500/25 transition-colors">25m Pomodoro</button>
+              <button type="button" onclick="applyCountdownPreset(2700)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">45m</button>
+              <button type="button" onclick="applyCountdownPreset(3600)" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-carbon-850 border border-ice-50/10 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors">60m</button>
+            </div>
+
+            <!-- Custom H:M:S Inputs -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-ice-400">Custom:</span>
+              <label class="sr-only" for="cd-hours">Hours</label>
+              <input id="cd-hours" type="number" min="0" max="99" value="0" placeholder="HH"
+                class="w-16 px-2.5 py-1.5 rounded-lg bg-carbon-850 border border-ice-50/15 text-center font-mono text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400" />
+              <span class="text-ice-500 font-mono">:</span>
+              <label class="sr-only" for="cd-minutes">Minutes</label>
+              <input id="cd-minutes" type="number" min="0" max="59" value="5" placeholder="MM"
+                class="w-16 px-2.5 py-1.5 rounded-lg bg-carbon-850 border border-ice-50/15 text-center font-mono text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400" />
+              <span class="text-ice-500 font-mono">:</span>
+              <label class="sr-only" for="cd-seconds">Seconds</label>
+              <input id="cd-seconds" type="number" min="0" max="59" value="0" placeholder="SS"
+                class="w-16 px-2.5 py-1.5 rounded-lg bg-carbon-850 border border-ice-50/15 text-center font-mono text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400" />
+              <button type="button" onclick="applyCustomCountdown()"
+                class="px-3.5 py-1.5 rounded-lg bg-cyanpulse-500/20 text-cyanpulse-400 border border-cyanpulse-400/35 hover:bg-cyanpulse-500/30 text-xs font-semibold transition-colors">
+                Set Time
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- HIIT / Interval Configuration Bar -->
+        <div id="panel-interval-config" class="relative z-10 hidden mt-6 p-4 sm:p-5 rounded-2xl bg-carbon-950/75 border border-ice-50/[0.08]">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-end">
+            <div>
+              <label for="hiit-work-sec" class="block text-xs font-semibold uppercase tracking-wider text-cyanpulse-400 mb-1.5">Work Duration (sec)</label>
+              <input id="hiit-work-sec" type="number" min="5" max="3600" value="40"
+                class="w-full px-3.5 py-2 rounded-xl bg-carbon-850 border border-ice-50/15 font-mono text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400" />
+            </div>
+            <div>
+              <label for="hiit-rest-sec" class="block text-xs font-semibold uppercase tracking-wider text-coralpulse-400 mb-1.5">Rest Duration (sec)</label>
+              <input id="hiit-rest-sec" type="number" min="0" max="3600" value="20"
+                class="w-full px-3.5 py-2 rounded-xl bg-carbon-850 border border-ice-50/15 font-mono text-sm text-ice-50 focus:outline-none focus:border-coralpulse-400" />
+            </div>
+            <div>
+              <label for="hiit-rounds" class="block text-xs font-semibold uppercase tracking-wider text-ice-400 mb-1.5">Total Rounds</label>
+              <input id="hiit-rounds" type="number" min="1" max="99" value="8"
+                class="w-full px-3.5 py-2 rounded-xl bg-carbon-850 border border-ice-50/15 font-mono text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400" />
+            </div>
+            <div class="flex gap-2">
+              <button type="button" onclick="applyIntervalConfig()"
+                class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-coralpulse-500 to-coralpulse-400 text-carbon-950 font-display font-bold text-xs sm:text-sm hover:brightness-110 transition-all">
+                Apply HIIT Setup
+              </button>
+              <button type="button" onclick="applyIntervalPreset(20, 10, 8)" title="Tabata 20s/10s x 8"
+                class="px-3 py-2.5 rounded-xl bg-carbon-850 border border-ice-50/15 text-xs font-mono text-ice-200 hover:border-coralpulse-400/50 transition-colors">
+                Tabata
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIGNATURE VISUAL ELEMENT: Precision Chronometer Ring & Split Telemetry Stage -->
+        <div class="relative z-10 py-8 sm:py-10 flex flex-col items-center justify-center">
+          <!-- Status Telemetry Pills Above Dial -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5 mb-5">
+            <span id="telemetry-mode-badge" class="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-cyanpulse-500/15 text-cyanpulse-400 border border-cyanpulse-400/30">
+              STOPWATCH • READY
+            </span>
+            <span id="telemetry-round-badge" class="hidden px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-coralpulse-500/15 text-coralpulse-400 border border-coralpulse-400/30">
+              ROUND 1 / 8
+            </span>
+          </div>
+
+          <!-- Interactive SVG Chronometer Ring + Digital Readout -->
+          <div class="relative w-[290px] h-[290px] sm:w-[360px] sm:h-[360px] flex items-center justify-center">
+            <svg class="w-full h-full drop-shadow-[0_0_24px_rgba(34,211,238,0.16)]" viewBox="0 0 320 320" aria-hidden="true">
+              <!-- Outer Ticks Track -->
+              <circle cx="160" cy="160" r="148" fill="none" stroke="rgba(244,246,251,0.06)" stroke-width="2" stroke-dasharray="2 7.3" />
+              <!-- Base Track Ring -->
+              <circle cx="160" cy="160" r="134" fill="rgba(7,8,12,0.55)" stroke="rgba(244,246,251,0.08)" stroke-width="10" />
+              <!-- Active Telemetry Progress Ring -->
+              <circle id="chrono-progress-ring" class="progress-ring-circle" cx="160" cy="160" r="134" fill="none"
+                stroke="#22d3ee" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="841.95" stroke-dashoffset="841.95" />
+              <!-- Inner Precision Ring -->
+              <circle cx="160" cy="160" r="118" fill="none" stroke="rgba(244,246,251,0.05)" stroke-width="1" />
+            </svg>
+
+            <!-- Center Digital Readout -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center select-none">
+              <span id="readout-sub-top" class="text-[11px] font-mono uppercase tracking-[0.22em] text-ice-400 mb-1">
+                OVERALL ELAPSED
+              </span>
+              <div id="main-time-display" class="tabular-readout font-bold text-4xl sm:text-5xl tracking-tight text-ice-50 leading-none">
+                00:00<span class="text-cyanpulse-400 text-2xl sm:text-3xl">.00</span>
+              </div>
+              <div id="secondary-lap-display" class="mt-2.5 tabular-readout text-xs sm:text-sm font-medium text-ice-400 flex items-center gap-1.5">
+                <span class="text-ice-500">CURRENT LAP:</span>
+                <span id="current-lap-time" class="text-ice-200 font-semibold">00:00.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Current Lap vs. Overall Elapsed Telemetry Bar -->
+          <div id="split-telemetry-bar-wrap" class="w-full max-w-xl mt-5 px-2">
+            <div class="flex items-center justify-between text-[11px] font-mono text-ice-400 mb-1.5">
+              <span>CURRENT SPLIT RATIO</span>
+              <span id="split-ratio-label">0% OF TOTAL ELAPSED</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-carbon-950 border border-ice-50/[0.08] overflow-hidden p-0.5">
+              <div id="split-ratio-bar" class="h-full rounded-full bg-gradient-to-r from-cyanpulse-500 to-coralpulse-400 transition-all duration-75" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Primary Action Buttons (Generous touch targets, separated from ads) -->
+          <div class="mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full max-w-2xl">
+            <button id="btn-start-pause" type="button" onclick="toggleStartPause()"
+              class="min-w-[140px] sm:min-w-[164px] px-6 py-4 rounded-2xl font-display font-bold text-base sm:text-lg bg-gradient-to-r from-cyanpulse-500 to-cyanpulse-400 text-carbon-950 hover:brightness-110 shadow-lg shadow-cyanpulse-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg id="icon-play" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="6 4 20 12 6 20 6 4"></polygon>
+              </svg>
+              <svg id="icon-pause" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              <span id="label-start-pause">Start</span>
+            </button>
+
+            <button id="btn-lap-action" type="button" onclick="handleLapOrPhaseAction()"
+              class="min-w-[132px] sm:min-w-[152px] px-5 py-4 rounded-2xl font-display font-bold text-base sm:text-lg bg-carbon-800 border border-ice-50/15 text-ice-50 hover:border-coralpulse-400/60 hover:text-coralpulse-400 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg class="w-5 h-5 text-coralpulse-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+              </svg>
+              <span id="label-lap-action">Lap / Split</span>
+            </button>
+
+            <button id="btn-reset" type="button" onclick="resetTimer()"
+              class="min-w-[116px] px-5 py-4 rounded-2xl font-display font-semibold text-base bg-carbon-950 border border-ice-50/10 text-ice-400 hover:border-ice-50/30 hover:text-ice-50 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Lap Note / Label Input + Save Session Strip -->
+          <div class="mt-6 w-full max-w-2xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <div class="relative flex-1">
+              <label for="lap-note-input" class="sr-only">Next Lap Note or Session Label</label>
+              <input id="lap-note-input" type="text" maxlength="60"
+                placeholder="Optional lap note (e.g., Sprint 100m, Set 1, Deep Focus Block)..."
+                class="w-full px-4 py-2.5 rounded-xl bg-carbon-950/90 border border-ice-50/12 text-sm text-ice-50 placeholder-ice-500 focus:outline-none focus:border-cyanpulse-400" />
+            </div>
+            <button type="button" onclick="saveCurrentSession()"
+              class="px-4 py-2.5 rounded-xl bg-carbon-800 border border-cyanpulse-400/30 text-cyanpulse-400 hover:bg-cyanpulse-500/15 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap flex items-center justify-center gap-1.5 cursor-pointer">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>Save Session</span>
+            </button>
+          </div>
+
+          <!-- Keyboard Shortcut Legend -->
+          <div class="mt-4 flex flex-wrap items-center justify-center gap-4 text-[11px] text-ice-500 font-mono">
+            <span><kbd class="px-1.5 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200">SPACE</kbd> Start / Pause</span>
+            <span><kbd class="px-1.5 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200">L</kbd> Record Lap / Next Phase</span>
+            <span><kbd class="px-1.5 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200">R</kbd> Reset</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LAP TELEMETRY & SESSION ARCHIVE SECTION -->
+    <section id="lap-telemetry" class="py-4 sm:py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
+
+      <!-- Live Split Statistics Strip -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-cyanpulse-400 block">Fastest Lap</span>
+            <span id="stat-fastest-lap" class="tabular-readout font-bold text-xl sm:text-2xl text-ice-50 mt-1 block">—</span>
+            <span id="stat-fastest-label" class="text-xs text-ice-500 mt-0.5 block">Needs 2+ laps</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/30 flex items-center justify-center text-cyanpulse-400 font-mono font-bold text-xs">
+            MIN
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-coralpulse-400 block">Slowest Lap</span>
+            <span id="stat-slowest-lap" class="tabular-readout font-bold text-xl sm:text-2xl text-ice-50 mt-1 block">—</span>
+            <span id="stat-slowest-label" class="text-xs text-ice-500 mt-0.5 block">Needs 2+ laps</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-coralpulse-500/15 border border-coralpulse-400/30 flex items-center justify-center text-coralpulse-400 font-mono font-bold text-xs">
+            MAX
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-ice-400 block">Average Lap Pace</span>
+            <span id="stat-average-lap" class="tabular-readout font-bold text-xl sm:text-2xl text-ice-50 mt-1 block">—</span>
+            <span id="stat-total-laps" class="text-xs text-ice-500 mt-0.5 block">0 recorded splits</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-ice-50/[0.06] border border-ice-50/15 flex items-center justify-center text-ice-200 font-mono font-bold text-xs">
+            AVG
+          </div>
+        </div>
+      </div>
+
+      <!-- Filterable & Sortable Lap Splits Table Card -->
+      <div class="glass-panel rounded-3xl p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-ice-50/[0.08]">
+          <div>
+            <h2 class="font-display font-bold text-xl sm:text-2xl text-ice-50">Lap &amp; Split Telemetry</h2>
+            <p class="text-xs sm:text-sm text-ice-400 mt-0.5">Filter key splits, star benchmark laps, search notes, or export clean CSV/Text data.</p>
+          </div>
+
+          <!-- Export Controls -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="copyLapsToClipboard()"
+              class="px-3.5 py-2 rounded-xl bg-carbon-850 border border-ice-50/12 text-xs font-semibold text-ice-200 hover:border-cyanpulse-400/50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+              Copy Text
+            </button>
+            <button type="button" onclick="exportLapsCSV()"
+              class="px-3.5 py-2 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/35 text-xs font-semibold text-cyanpulse-400 hover:bg-cyanpulse-500/25 transition-colors cursor-pointer">
+              Export CSV
+            </button>
+            <button type="button" onclick="clearLapsOnly()"
+              class="px-3.5 py-2 rounded-xl bg-carbon-950 border border-ice-50/10 text-xs font-semibold text-ice-400 hover:text-coralpulse-400 hover:border-coralpulse-400/40 transition-colors cursor-pointer">
+              Clear Laps
+            </button>
+          </div>
+        </div>
+
+        <!-- Smart Filters: View Filter, Sort Order & Search -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div>
+            <label for="lap-filter-select" class="block text-[11px] font-mono uppercase tracking-wider text-ice-400 mb-1">Filter Splits</label>
+            <select id="lap-filter-select" onchange="renderLapTable()"
+              class="w-full px-3 py-2 rounded-xl bg-carbon-950 border border-ice-50/12 text-xs sm:text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400">
+              <option value="all">All Laps</option>
+              <option value="extremes">Fastest &amp; Slowest Highlighted</option>
+              <option value="flagged">Flagged / Key Splits (★)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="lap-sort-select" class="block text-[11px] font-mono uppercase tracking-wider text-ice-400 mb-1">Sort Order</label>
+            <select id="lap-sort-select" onchange="renderLapTable()"
+              class="w-full px-3 py-2 rounded-xl bg-carbon-950 border border-ice-50/12 text-xs sm:text-sm text-ice-50 focus:outline-none focus:border-cyanpulse-400">
+              <option value="newest">Lap # (Newest First)</option>
+              <option value="oldest">Lap # (Oldest First)</option>
+              <option value="fastest">Fastest Split First</option>
+              <option value="slowest">Slowest Split First</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="lap-search-input" class="block text-[11px] font-mono uppercase tracking-wider text-ice-400 mb-1">Search Lap Labels</label>
+            <input id="lap-search-input" type="search" oninput="renderLapTable()" placeholder="Filter by note or lap #..."
+              class="w-full px-3 py-2 rounded-xl bg-carbon-950 border border-ice-50/12 text-xs sm:text-sm text-ice-50 placeholder-ice-500 focus:outline-none focus:border-cyanpulse-400" />
+          </div>
+        </div>
+
+        <!-- Responsive Table Container -->
+        <div class="overflow-x-auto rounded-2xl border border-ice-50/[0.07] bg-carbon-950/60">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-ice-50/[0.08] text-[11px] font-mono uppercase tracking-wider text-ice-400 bg-carbon-900/80">
+                <th class="py-3 px-3.5 w-12 text-center">Flag</th>
+                <th class="py-3 px-3.5">Lap #</th>
+                <th class="py-3 px-3.5">Label / Note</th>
+                <th class="py-3 px-3.5">Lap Time</th>
+                <th class="py-3 px-3.5">Overall Split</th>
+                <th class="py-3 px-3.5 text-right">Pace Delta</th>
+              </tr>
+            </thead>
+            <tbody id="lap-table-body" class="divide-y divide-ice-50/[0.05] text-xs sm:text-sm">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Saved Session Archive (localStorage with Mode Filter) -->
+      <div class="glass-panel rounded-3xl p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-ice-50/[0.08]">
+          <div>
+            <h3 class="font-display font-bold text-lg sm:text-xl text-ice-50">Local Session Archive</h3>
+            <p class="text-xs text-ice-400 mt-0.5">Saved directly in your browser's <code class="font-mono text-cyanpulse-400">localStorage</code> for instant recall.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="archive-filter-select" class="sr-only">Filter Saved Sessions</label>
+            <select id="archive-filter-select" onchange="renderSessionArchive()"
+              class="px-3 py-2 rounded-xl bg-carbon-950 border border-ice-50/12 text-xs text-ice-50 focus:outline-none focus:border-cyanpulse-400">
+              <option value="all">All Sessions</option>
+              <option value="stopwatch">Stopwatch</option>
+              <option value="countdown">Countdown</option>
+              <option value="interval">Intervals</option>
+            </select>
+            <button type="button" onclick="clearSavedSessions()"
+              class="px-3 py-2 rounded-xl bg-carbon-950 border border-ice-50/10 text-xs text-ice-400 hover:text-coralpulse-400 hover:border-coralpulse-400/40 transition-colors cursor-pointer">
+              Clear Archive
+            </button>
+          </div>
+        </div>
+
+        <div id="session-archive-list" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ADSTERRA SLOT 2: #ad-slot-mid-native (Centered Native / Responsive Banner, CLS-safe) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-4">
+      <div class="ad-container-wrapper">
+        <span class="text-[10px] uppercase tracking-[0.2em] text-ice-500 mb-1.5 select-none">Advertisement</span>
+        <div id="ad-slot-mid-native" class="ad-slot-box min-h-[120px] sm:min-h-[140px]">
+          <!-- =====================================================================
+               ADSTERRA MID-PAGE NATIVE / RESPONSIVE BANNER SLOT
+               Paste your Adsterra Native Banner or 728x90 <script> tag directly below.
+               ===================================================================== -->
+          <div class="text-xs font-mono text-ice-500/60 py-6 px-3 text-center">
+            Native / Responsive Display Slot • Centered Container
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 8-CARD FEATURE GRID -->
+    <section class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <span class="text-xs font-mono uppercase tracking-[0.2em] text-cyanpulse-400">ENGINEERED FOR ZERO DRIFT</span>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl text-ice-50 mt-2">
+          Built for athletes, focus blocks &amp; everyday timing
+        </h2>
+        <p class="text-sm sm:text-base text-ice-400 mt-3">
+          Every component in Stopwatch / TIMER is crafted to eliminate timer lag, visual clutter, and accidental misclicks.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <!-- Card 1 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-cyanpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/30 flex items-center justify-center text-cyanpulse-400 mb-4 font-mono font-bold">01</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Timestamp Drift Compensation</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Anchored to high-resolution <code class="font-mono text-cyanpulse-400">performance.now()</code> deltas so switching tabs or locking your screen never causes a single millisecond of drift.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-cyanpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/30 flex items-center justify-center text-cyanpulse-400 mb-4 font-mono font-bold">02</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Instant Lap &amp; Split Analytics</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Automatically calculates individual segment duration, cumulative split time, average pace, and highlights your fastest and slowest intervals.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-coralpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-coralpulse-500/15 border border-coralpulse-400/30 flex items-center justify-center text-coralpulse-400 mb-4 font-mono font-bold">03</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Countdown &amp; Pomodoro Presets</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Launch 1m, 5m, 15m, 25m Pomodoro, or 60m sessions in one tap—or dial in any custom HH:MM:SS target with smooth ring depletion.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-coralpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-coralpulse-500/15 border border-coralpulse-400/30 flex items-center justify-center text-coralpulse-400 mb-4 font-mono font-bold">04</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">HIIT &amp; Tabata Round Timer</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Configure custom Work and Rest intervals across up to 99 rounds with clear phase indicators and synthesized acoustic transition cues.
+          </p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-cyanpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/30 flex items-center justify-center text-cyanpulse-400 mb-4 font-mono font-bold">05</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Precision Decimal Filters</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Switch between 1/100s centiseconds, 1/1000s milliseconds, or distraction-free whole seconds with tabular numerals that never jitter.
+          </p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-cyanpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-cyanpulse-500/15 border border-cyanpulse-400/30 flex items-center justify-center text-cyanpulse-400 mb-4 font-mono font-bold">06</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Tactile Keyboard Shortcuts</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Keep your eyes on the track or screen: hit <kbd class="font-mono text-ice-200">Space</kbd> to Start/Pause, <kbd class="font-mono text-ice-200">L</kbd> to Lap, and <kbd class="font-mono text-ice-200">R</kbd> to Reset effortlessly.
+          </p>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-coralpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-coralpulse-500/15 border border-coralpulse-400/30 flex items-center justify-center text-coralpulse-400 mb-4 font-mono font-bold">07</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">One-Click CSV &amp; Text Export</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Download structured spreadsheets or copy formatted split summaries straight to your clipboard for training logs and coaching reports.
+          </p>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="glass-panel rounded-2xl p-5 hover:border-coralpulse-400/35 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-coralpulse-500/15 border border-coralpulse-400/30 flex items-center justify-center text-coralpulse-400 mb-4 font-mono font-bold">08</div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-ice-50">Private Local Session Storage</h3>
+          <p class="text-xs sm:text-sm text-ice-400 mt-2 leading-relaxed">
+            Save completed sessions locally in your browser without accounts, cookies, or cloud uploads—your timing telemetry stays 100% yours.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 3-STEP VISUAL GUIDE -->
+    <section class="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="glass-panel rounded-3xl p-6 sm:p-10">
+        <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+          <span class="text-xs font-mono uppercase tracking-[0.2em] text-coralpulse-400">RAPID WORKFLOW</span>
+          <h2 class="font-display font-bold text-2xl sm:text-4xl text-ice-50 mt-2">Three steps. That's it.</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="p-5 rounded-2xl bg-carbon-950/75 border border-ice-50/[0.08] relative">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-cyanpulse-500 text-carbon-950 font-mono font-bold text-sm mb-4">1</span>
+            <h3 class="font-display font-bold text-lg text-ice-50">Pick Stopwatch, Countdown, or HIIT</h3>
+            <p class="text-sm text-ice-400 mt-2 leading-relaxed">
+              Select open-ended split timing, choose a quick Pomodoro countdown preset, or configure custom work/rest rounds.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-carbon-950/75 border border-ice-50/[0.08] relative">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-cyanpulse-500 text-carbon-950 font-mono font-bold text-sm mb-4">2</span>
+            <h3 class="font-display font-bold text-lg text-ice-50">Press Start or hit Spacebar</h3>
+            <p class="text-sm text-ice-400 mt-2 leading-relaxed">
+              Initiate instant zero-latency counting. Watch the telemetry dial sweep smoothly while tabular numerals track every fraction of a second.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-carbon-950/75 border border-ice-50/[0.08] relative">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-coralpulse-500 text-carbon-950 font-mono font-bold text-sm mb-4">3</span>
+            <h3 class="font-display font-bold text-lg text-ice-50">Record laps, filter splits &amp; export</h3>
+            <p class="text-sm text-ice-400 mt-2 leading-relaxed">
+              Tap <kbd class="font-mono text-ice-200">L</kbd> to capture labeled checkpoints, isolate your fastest splits, archive your session, or export a CSV file.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. COMPREHENSIVE LONG-FORM SEO GUIDE (2,000+ Words) -->
+    <article id="timing-guide" class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <header class="mb-10 pb-8 border-b border-ice-50/[0.08]">
+        <span class="text-xs font-mono uppercase tracking-[0.2em] text-cyanpulse-400">TECHNICAL CHRONOMETRY &amp; PRODUCTIVITY MANUAL</span>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl text-ice-50 mt-2 leading-tight">
+          The Complete Guide to Precision Browser Stopwatches, Split Telemetry &amp; Interval Timing
+        </h2>
+        <p class="text-sm sm:text-base text-ice-400 mt-3 leading-relaxed">
+          Whether you are timing 400-meter track repeats, benchmarking software latency, structuring 25-minute Pomodoro deep-work sprints, or running high-intensity interval training (HIIT), understanding how digital chronometers measure time ensures your data stays trustworthy under real-world conditions.
+        </p>
+      </header>
+
+      <div class="space-y-8 text-sm sm:text-base text-ice-200/90 leading-relaxed">
+        <section class="space-y-4">
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-ice-50">
+            1. Why Most Online Stopwatches Drift—And How Monotonic Timestamp Math Solves It
+          </h3>
+          <p>
+            If you have ever used a basic web timer while switching between browser tabs, compiling code, or locking your phone screen, you may have noticed a frustrating flaw: when you return to the timer tab, the clock has fallen behind real-world wall time. That phenomenon is known as <strong>timer drift</strong>, and it stems from a fundamental architectural shortcut used in naive JavaScript timers.
+          </p>
+          <p>
+            Legacy browser timers frequently rely on <code class="font-mono text-xs text-cyanpulse-400 bg-carbon-850 px-1.5 py-0.5 rounded">setInterval(..., 10)</code> and simply add <code class="font-mono text-xs text-ice-50">10ms</code> to a counter variable every time the callback fires. In theory, one hundred callbacks equal one second. In practice, modern web browsers aggressively throttle background tabs to conserve battery and CPU cycles—often limiting background callbacks to once every 1,000 milliseconds (one full second) or suspending them altogether on mobile devices. When a naive counter expects 100 ticks per second but only receives one, a 60-second sprint can erroneously register as 14 seconds.
+          </p>
+          <p>
+            <strong>Stopwatch / TIMER eliminates timer drift completely</strong> by decoupling visual screen painting from time calculation. Instead of counting ticks, our engine captures an exact monotonic hardware timestamp via the High Resolution Time API (<code class="font-mono text-xs text-cyanpulse-400 bg-carbon-850 px-1.5 py-0.5 rounded">performance.now()</code>) the exact microsecond you press Start. On every animation frame (<code class="font-mono text-xs text-ice-50">requestAnimationFrame</code>), the engine computes the true delta between the current hardware clock and your start anchor, adding any previously accumulated duration from prior pauses. Even if you minimize your browser for three hours, switch across twenty tabs, or put your laptop to sleep, the instant you look back at the dial, the readout reflects exact elapsed physical time down to the millisecond.
+          </p>
+        </section>
+
+        <section class="space-y-4">
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-ice-50">
+            2. Lap Time vs. Split Time: Mastering Telemetry in Athletics &amp; Performance Analysis
+          </h3>
+          <p>
+            Coaches, runners, swimmers, motorsport engineers, and speedrunners rely on two complementary metrics during any multi-stage effort: <strong>Lap Time</strong> and <strong>Split Time</strong>. While people often use the terms interchangeably in casual conversation, keeping them distinct provides dramatically clearer performance diagnostics.
+          </p>
+          <ul class="space-y-2.5 pl-5 list-disc text-ice-300">
+            <li>
+              <strong class="text-ice-50">Lap Time (Segment Duration):</strong> The exact time required to complete a single isolated interval—from the moment you triggered the previous checkpoint until the moment you trigger the current one. In a 1,600-meter track run broken into four 400-meter laps, Lap 3 represents only the third quarter-mile, isolated from how fast or slow you ran Laps 1 and 2.
+            </li>
+            <li>
+              <strong class="text-ice-50">Split Time (Cumulative Elapsed):</strong> The total running time elapsed from the initial start signal up to a specific checkpoint. In that same 1,600-meter run, your Split at Lap 3 tells you your cumulative 1,200-meter mark, allowing you to compare against target race-pace charts immediately.
+            </li>
+            <li>
+              <strong class="text-ice-50">Pace Delta &amp; Extremes:</strong> Once two or more laps are logged, Stopwatch automatically computes your rolling average lap duration and flags both your fastest segment (<span class="text-cyanpulse-400 font-mono">MIN</span>) and slowest segment (<span class="text-coralpulse-400 font-mono">MAX</span>). Identifying where your pace fades—such as Lap 4 in a 5-set workout or the third round of a presentation rehearsal—lets you adjust pacing strategy with objective evidence.
+            </li>
+          </ul>
+          <p>
+            By attaching custom text notes before or right as you record a split—such as <em>"Warmup 200m"</em>, <em>"Threshold Interval 3"</em>, or <em>"Slide Deck Demo"</em>—your exported CSV becomes an immediately readable performance log without needing manual post-session annotation.
+          </p>
+        </section>
+
+        <!-- ADSTERRA SLOT 3: #ad-slot-article (Centered In-Content Banner, CLS-safe) -->
+        <div class="my-6">
+          <div class="ad-container-wrapper">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-ice-500 mb-1.5 select-none">Advertisement</span>
+            <div id="ad-slot-article" class="ad-slot-box min-h-[100px] sm:min-h-[250px]">
+              <!-- =====================================================================
+                   ADSTERRA IN-ARTICLE SLOT (728x90 Banner or 300x250 Medium Rectangle)
+                   Paste your Adsterra In-Content <script> tag directly below.
+                   ===================================================================== -->
+              <div class="text-xs font-mono text-ice-500/60 py-8 px-3 text-center">
+                In-Article Display Slot • 728×90 / 300×250
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="space-y-4">
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-ice-50">
+            3. Choosing the Right Display Resolution: Centiseconds, Milliseconds, or Whole Seconds?
+          </h3>
+          <p>
+            Different activities demand different levels of temporal granularity. Displaying too many rapidly flickering digits during a 45-minute study session creates unnecessary visual noise, while hiding decimal fractions during a 60-meter sprint deprives you of vital precision. Stopwatch includes a live <strong>Resolution Filter</strong> that transforms the readout format on the fly without interrupting a running clock:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4">
+            <div class="p-4 rounded-2xl glass-panel-subtle">
+              <div class="font-mono text-xs text-cyanpulse-400 font-semibold mb-1">CENTISECONDS (.cc)</div>
+              <p class="text-xs text-ice-300 leading-relaxed">
+                Displays hundredths of a second (<code class="font-mono">00:14.82</code>). The gold standard for track &amp; field, swimming, Rubik's cube solves, and manual reaction timing.
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl glass-panel-subtle">
+              <div class="font-mono text-xs text-coralpulse-400 font-semibold mb-1">MILLISECONDS (.mmm)</div>
+              <p class="text-xs text-ice-300 leading-relaxed">
+                Displays thousandths of a second (<code class="font-mono">00:14.824</code>). Ideal for engineering benchmarks, UI animation profiling, audio sync checks, and telemetry testing.
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl glass-panel-subtle">
+              <div class="font-mono text-xs text-ice-200 font-semibold mb-1">WHOLE SECONDS</div>
+              <p class="text-xs text-ice-300 leading-relaxed">
+                Displays clean <code class="font-mono">MM:SS</code> or <code class="font-mono">HH:MM:SS</code> digits. Best suited for Pomodoro focus blocks, cooking, meditation, and public speaking rehearsals.
+              </p>
+            </div>
+          </div>
+          <p>
+            Notice also how the digits remain rock-solid horizontally even when milliseconds spin at 60 frames per second. Standard proportional fonts assign different horizontal widths to the numeral <code class="font-mono">1</code> versus <code class="font-mono">8</code>, causing centered timers to vibrate sideways every tenth of a second. Stopwatch enforces <code class="font-mono text-xs text-cyanpulse-400 bg-carbon-850 px-1.5 py-0.5 rounded">font-variant-numeric: tabular-nums</code> with JetBrains Mono so every character occupies an identical fixed-width cell.
+          </p>
+        </section>
+
+        <section class="space-y-4">
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-ice-50">
+            4. Structuring Deep Work &amp; HIIT Workouts with Countdown and Interval Modes
+          </h3>
+          <p>
+            While an ascending stopwatch excels at measuring open-ended duration, structured time-boxing requires countdown boundaries. Switching to the <strong>Countdown Timer</strong> tab gives you single-click access to proven cognitive and athletic durations:
+          </p>
+          <p>
+            For knowledge workers, writers, and developers, the <strong>25-minute Pomodoro preset</strong> paired with a <strong>5-minute recovery countdown</strong> creates sustainable cognitive momentum. By externalizing time management onto a high-contrast visual progress ring, your brain stops checking the system clock every few minutes and stays immersed in the task until the gentle Web Audio completion chime sounds. For longer analytical sessions—such as practice exams, architectural planning, or code reviews—the <strong>45-minute</strong> and <strong>60-minute</strong> presets provide clean macro blocks.
+          </p>
+          <p>
+            When your goal shifts from steady-state focus to metabolic conditioning, the <strong>HIIT / Intervals</strong> tab automates alternating work-to-rest ratios across multiple rounds. Classic protocols like <strong>Tabata</strong> (20 seconds maximum-effort work, 10 seconds rest, 8 rounds totaling 4 minutes) or <strong>40/20 athletic conditioning</strong> (40 seconds work, 20 seconds active recovery across 8 to 12 rounds) run hands-free. Distinct color shifts—electric cyan during <span class="text-cyanpulse-400 font-semibold">WORK</span> phases and signal coral-orange during <span class="text-coralpulse-400 font-semibold">REST</span> phases—let you read your current state at a glance from across a gym floor or home studio.
+          </p>
+        </section>
+
+        <section class="space-y-4">
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-ice-50">
+            5. Practical Tips for Accurate Manual Timing &amp; Keyboard Efficiency
+          </h3>
+          <p>
+            Human visual reaction time averages between 180 and 250 milliseconds when responding to an unexpected visual cue, whereas auditory reaction time averages 140 to 170 milliseconds. To minimize human trigger variance when manually operating a browser stopwatch:
+          </p>
+          <ol class="space-y-2 pl-5 list-decimal text-ice-300">
+            <li>
+              <strong class="text-ice-50">Use the Keyboard Instead of a Trackpad:</strong> Clicking a mouse button or tapping a glass touchscreen introduces mechanical travel delay. Resting your thumb on the <kbd class="font-mono text-xs px-1.5 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-50">Spacebar</kbd> to start and your index finger on <kbd class="font-mono text-xs px-1.5 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-50">L</kbd> to split cuts trigger latency dramatically and lets you watch the finish line rather than your cursor.
+            </li>
+            <li>
+              <strong class="text-ice-50">Anticipate Moving Checkpoints:</strong> When timing an athlete crossing a line or a speaker hitting a slide transition, track their approach during the final two seconds so your keystroke lands synchronously with the crossing rather than reacting after the event occurs.
+            </li>
+            <li>
+              <strong class="text-ice-50">Flag Outlier Splits Immediately:</strong> If you accidentally trigger a double-lap or want to mark a pivotal interval during a long session, click the star icon (<span class="text-coralpulse-400">★</span>) next to that row in the Lap Telemetry table. You can then filter the table to display only <em>Flagged / Key Splits</em> before exporting your report.
+            </li>
+          </ol>
+        </section>
+      </div>
+    </article>
+
+    <!-- 7. INTERACTIVE ACCORDION FAQ (10 Questions) -->
+    <section id="faq" class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <span class="text-xs font-mono uppercase tracking-[0.2em] text-coralpulse-400">FREQUENTLY ASKED QUESTIONS</span>
+        <h2 class="font-display font-bold text-2xl sm:text-4xl text-ice-50 mt-2">
+          Everything you need to know
+        </h2>
+      </div>
+
+      <div id="faq-accordion" class="space-y-3">
+        <!-- Q1 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="true">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="true"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>1. Does this online stopwatch stay accurate if I switch tabs or lock my screen?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Yes. Stopwatch / TIMER calculates elapsed time using high-resolution monotonic timestamps (<code class="font-mono text-cyanpulse-400">performance.now()</code>) anchored to your exact start moment. Even if your browser throttles background tabs or your device sleeps, the clock immediately displays the exact real-world elapsed duration upon return with zero cumulative drift.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>2. What is the difference between Lap Time and Overall Split Time?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              <strong>Lap Time</strong> measures only the duration of that individual segment (from the previous lap press to the current lap press). <strong>Overall Split</strong> measures the cumulative time from 00:00.00 up to that checkpoint. Recording both simultaneously lets you evaluate individual lap pacing alongside total race or session time.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>3. Which keyboard shortcuts can I use to control the timer?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Press <kbd class="font-mono text-ice-200">Spacebar</kbd> to Start or Pause, <kbd class="font-mono text-ice-200">L</kbd> to record a Lap/Split (or advance to the next interval phase in HIIT mode), and <kbd class="font-mono text-ice-200">R</kbd> to Reset. Shortcuts are smartly disabled whenever your cursor is inside a text or number input box so you can type lap notes freely.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>4. How do I export my recorded laps to CSV, Excel, or Google Sheets?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Click the <strong>Export CSV</strong> button in the Lap &amp; Split Telemetry bar to immediately download a <code class="font-mono text-cyanpulse-400">.csv</code> spreadsheet containing Lap #, Flag status, Custom Label, Lap Duration, Cumulative Split, and Pace Delta. You can also click <strong>Copy Text</strong> to paste a formatted split summary into Notion, Slack, or email.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>5. How do the audio chimes work, and can I mute them?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              All acoustic cues (lap clicks, countdown completion chimes, and HIIT work/rest round beeps) are synthesized directly in your browser using the native Web Audio API—no external MP3 files are downloaded. You can mute or unmute audio anytime using the <strong>Audio On / Muted</strong> button in the top navigation bar.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>6. Can I save my stopwatch or workout sessions for later review?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Yes. Click <strong>Save Session</strong> below the main controls to archive your current Stopwatch, Countdown, or HIIT session into your browser's <code class="font-mono text-cyanpulse-400">localStorage</code>. You can filter archived sessions by mode and review them anytime on the same device.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>7. How do I use the HIIT / Interval Round Timer?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Switch to the <strong>HIIT / Intervals</strong> tab, enter your desired Work Duration (in seconds), Rest Duration (in seconds), and Total Rounds (or click the 1-tap <em>Tabata</em> preset), then click <strong>Apply HIIT Setup</strong> and press Start. The ring automatically alternates between cyan WORK phases and coral REST phases until all rounds complete.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>8. Is there a limit to how many laps I can record?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              No. You can record hundreds or thousands of splits in a single session. Use the built-in Lap Table filters (<em>All Laps</em>, <em>Fastest &amp; Slowest</em>, <em>Flagged Splits</em>) and label search bar to navigate long split lists instantaneously.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>9. Does Stopwatch work offline without an internet connection?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Once the page has loaded in your browser, all timing calculations, lap splits, audio alerts, and CSV downloads operate 100% locally in client-side memory—no internet connection is required while timing.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="faq-item glass-panel rounded-2xl overflow-hidden" data-open="false">
+          <button type="button" onclick="toggleFaq(this)" aria-expanded="false"
+            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-ice-50 hover:text-cyanpulse-400 transition-colors cursor-pointer">
+            <span>10. Is my timing data private?</span>
+            <svg class="faq-chevron w-5 h-5 text-ice-400 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-content">
+            <div class="faq-inner px-5 pb-4 text-xs sm:text-sm text-ice-400 leading-relaxed">
+              Completely. Stopwatch / TIMER requires zero registration and never transmits your lap notes, workout intervals, or session history to any external server. Everything remains stored privately inside your browser.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADSTERRA SLOT 4: #ad-slot-footer (Centered Bottom Banner above Footer, CLS-safe) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
+      <div class="ad-container-wrapper">
+        <span class="text-[10px] uppercase tracking-[0.2em] text-ice-500 mb-1.5 select-none">Advertisement</span>
+        <div id="ad-slot-footer" class="ad-slot-box min-h-[90px] sm:min-h-[96px]">
+          <!-- =====================================================================
+               ADSTERRA FOOTER BANNER SLOT (728x90 Desktop / 320x50 Mobile)
+               Paste your Adsterra Bottom Banner <script> tag directly below.
+               ===================================================================== -->
+          <div class="text-xs font-mono text-ice-500/60 py-4 px-3 text-center">
+            Bottom Display Slot • 728×90 / 320×50
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MULTI-COLUMN FOOTER -->
+  <footer class="border-t border-ice-50/[0.08] bg-carbon-950/95 pt-12 pb-10 px-4 sm:px-6 lg:px-8 mt-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-ice-50/[0.07]">
+      <!-- Col 1: Brand Summary -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2.5">
+          <span class="font-display font-bold text-lg text-ice-50">Stopwatch</span>
+          <span class="text-xs font-mono font-semibold px-1.5 py-0.5 rounded bg-cyanpulse-500/15 text-cyanpulse-400 border border-cyanpulse-400/25">TIMER</span>
+        </div>
+        <p class="text-xs sm:text-sm text-ice-400 leading-relaxed">
+          Drift-free online stopwatch, split telemetry analyzer, Pomodoro countdown, and HIIT round chronometer engineered for zero-latency browser performance.
+        </p>
+        <p class="text-xs font-mono text-ice-500">
+          Monotonic Engine • 100% Client-Side
+        </p>
+      </div>
+
+      <!-- Col 2: Timing Modes -->
+      <div>
+        <h4 class="font-display font-bold text-sm uppercase tracking-wider text-ice-50 mb-3.5">Timing Modes</h4>
+        <ul class="space-y-2 text-xs sm:text-sm text-ice-400">
+          <li><a href="#workspace" onclick="switchMode('stopwatch')" class="hover:text-cyanpulse-400 transition-colors">Precision Stopwatch &amp; Laps</a></li>
+          <li><a href="#workspace" onclick="switchMode('countdown'); applyCountdownPreset(1500)" class="hover:text-cyanpulse-400 transition-colors">25-Minute Pomodoro Timer</a></li>
+          <li><a href="#workspace" onclick="switchMode('countdown')" class="hover:text-cyanpulse-400 transition-colors">Custom Countdown Timer</a></li>
+          <li><a href="#workspace" onclick="switchMode('interval')" class="hover:text-cyanpulse-400 transition-colors">HIIT &amp; Tabata Round Timer</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Telemetry & Shortcuts -->
+      <div>
+        <h4 class="font-display font-bold text-sm uppercase tracking-wider text-ice-50 mb-3.5">Keyboard Reference</h4>
+        <ul class="space-y-2 text-xs sm:text-sm text-ice-400 font-mono">
+          <li class="flex items-center justify-between max-w-[210px]">
+            <span>Start / Pause</span>
+            <kbd class="px-2 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200 text-xs">Space</kbd>
+          </li>
+          <li class="flex items-center justify-between max-w-[210px]">
+            <span>Lap / Next Phase</span>
+            <kbd class="px-2 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200 text-xs">L</kbd>
+          </li>
+          <li class="flex items-center justify-between max-w-[210px]">
+            <span>Reset Clock</span>
+            <kbd class="px-2 py-0.5 rounded bg-carbon-850 border border-ice-50/15 text-ice-200 text-xs">R</kbd>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Resources & Privacy -->
+      <div>
+        <h4 class="font-display font-bold text-sm uppercase tracking-wider text-ice-50 mb-3.5">Resources &amp; Privacy</h4>
+        <ul class="space-y-2 text-xs sm:text-sm text-ice-400">
+          <li><a href="#lap-telemetry" class="hover:text-cyanpulse-400 transition-colors">CSV &amp; Split Export</a></li>
+          <li><a href="#timing-guide" class="hover:text-cyanpulse-400 transition-colors">Chronometry &amp; Pacing Guide</a></li>
+          <li><a href="#faq" class="hover:text-cyanpulse-400 transition-colors">Frequently Asked Questions</a></li>
+          <li class="text-xs text-ice-500 pt-1">Local-first privacy: no personal data or timing logs leave your browser.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ice-500">
+      <p>&copy; <span id="copyright-year">2026</span> Stopwatch / TIMER. Free Browser Chronometer Utility.</p>
+      <p>Built with tabular precision &amp; monotonic timestamp synchronization.</p>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       VANILLA JAVASCRIPT CHRONOMETER ENGINE, AUDIO SYNTH & TELEMETRY UI
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Set dynamic year
+      const yearEl = document.getElementById('copyright-year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      // Constants
+      const RING_CIRCUMFERENCE = 2 * Math.PI * 134; // r = 134 => ~841.95
+      const STORAGE_KEY_SESSIONS = 'Stopwatch_TIMER_sessions_v1';
+
+      // Application State
+      const state = {
+        mode: 'stopwatch', // 'stopwatch' | 'countdown' | 'interval'
+        precision: 'centi', // 'centi' | 'milli' | 'seconds'
+        audioEnabled: true,
+
+        // Stopwatch state (monotonic performance.now() delta math)
+        swRunning: false,
+        swStartPerf: 0,
+        swAccumulatedMs: 0,
+        swLastLapTotalMs: 0,
+        laps: [], // { id, number, label, lapMs, splitMs, flagged }
+
+        // Countdown state
+        cdRunning: false,
+        cdDurationMs: 5 * 60 * 1000, // default 5m
+        cdRemainingMs: 5 * 60 * 1000,
+        cdEndPerf: 0,
+        cdCompleted: false,
+
+        // HIIT / Interval state
+        hiitRunning: false,
+        hiitWorkMs: 40 * 1000,
+        hiitRestMs: 20 * 1000,
+        hiitTotalRounds: 8,
+        hiitCurrentRound: 1,
+        hiitPhase: 'WORK', // 'WORK' | 'REST' | 'DONE'
+        hiitPhaseDurationMs: 40 * 1000,
+        hiitPhaseRemainingMs: 40 * 1000,
+        hiitPhaseEndPerf: 0,
+
+        rafId: null,
+      };
+
+      // DOM References
+      const els = {
+        mainDisplay: document.getElementById('main-time-display'),
+        subTop: document.getElementById('readout-sub-top'),
+        secondaryWrap: document.getElementById('secondary-lap-display'),
+        currentLapTime: document.getElementById('current-lap-time'),
+        progressRing: document.getElementById('chrono-progress-ring'),
+        modeBadge: document.getElementById('telemetry-mode-badge'),
+        roundBadge: document.getElementById('telemetry-round-badge'),
+        splitBarWrap: document.getElementById('split-telemetry-bar-wrap'),
+        splitRatioLabel: document.getElementById('split-ratio-label'),
+        splitRatioBar: document.getElementById('split-ratio-bar'),
+
+        btnStartPause: document.getElementById('btn-start-pause'),
+        iconPlay: document.getElementById('icon-play'),
+        iconPause: document.getElementById('icon-pause'),
+        labelStartPause: document.getElementById('label-start-pause'),
+        labelLapAction: document.getElementById('label-lap-action'),
+        lapNoteInput: document.getElementById('lap-note-input'),
+
+        panelCdConfig: document.getElementById('panel-countdown-config'),
+        panelHiitConfig: document.getElementById('panel-interval-config'),
+
+        statFastest: document.getElementById('stat-fastest-lap'),
+        statFastestLabel: document.getElementById('stat-fastest-label'),
+        statSlowest: document.getElementById('stat-slowest-lap'),
+        statSlowestLabel: document.getElementById('stat-slowest-label'),
+        statAverage: document.getElementById('stat-average-lap'),
+        statTotalLaps: document.getElementById('stat-total-laps'),
+
+        lapTableBody: document.getElementById('lap-table-body'),
+        lapFilterSelect: document.getElementById('lap-filter-select'),
+        lapSortSelect: document.getElementById('lap-sort-select'),
+        lapSearchInput: document.getElementById('lap-search-input'),
+
+        archiveFilterSelect: document.getElementById('archive-filter-select'),
+        archiveList: document.getElementById('session-archive-list'),
+      };
+
+      // ===================================================================
+      // WEB AUDIO API SYNTHESIZER (Zero External Files)
+      // ===================================================================
+      let audioCtx = null;
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+      }
+
+      function playTone(freq = 880, duration = 0.08, type = 'sine', gainPeak = 0.12, delay = 0) {
+        if (!state.audioEnabled) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime + delay;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(gainPeak, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration + 0.02);
+        } catch (err) {
+          // Ignore audio errors if blocked before user gesture
+        }
+      }
+
+      function playCue(kind) {
+        if (!state.audioEnabled) return;
+        if (kind === 'start') {
+          playTone(660, 0.07, 'triangle', 0.11, 0);
+          playTone(990, 0.09, 'triangle', 0.11, 0.06);
+        } else if (kind === 'pause') {
+          playTone(520, 0.08, 'sine', 0.09, 0);
+        } else if (kind === 'lap') {
+          playTone(1180, 0.06, 'sine', 0.11, 0);
+        } else if (kind === 'phase') {
+          playTone(784, 0.11, 'triangle', 0.14, 0);
+          playTone(1046.5, 0.15, 'triangle', 0.14, 0.12);
+        } else if (kind === 'complete') {
+          playTone(587.33, 0.14, 'triangle', 0.15, 0);
+          playTone(783.99, 0.14, 'triangle', 0.15, 0.14);
+          playTone(1174.66, 0.28, 'triangle', 0.16, 0.28);
+        }
+      }
+
+      // Toggle Audio Button
+      document.getElementById('audio-toggle-btn').addEventListener('click', function () {
+        state.audioEnabled = !state.audioEnabled;
+        this.setAttribute('aria-pressed', String(state.audioEnabled));
+        document.getElementById('audio-icon-on').classList.toggle('hidden', !state.audioEnabled);
+        document.getElementById('audio-icon-off').classList.toggle('hidden', state.audioEnabled);
+        document.getElementById('audio-status-label').textContent = state.audioEnabled ? 'Audio On' : 'Muted';
+        if (state.audioEnabled) playTone(880, 0.06, 'sine', 0.09);
+      });
+
+      // ===================================================================
+      // TIME FORMATTING HELPERS
+      // ===================================================================
+      function pad2(n) {
+        return n < 10 ? '0' + n : String(n);
+      }
+
+      function pad3(n) {
+        if (n < 10) return '00' + n;
+        if (n < 100) return '0' + n;
+        return String(n);
+      }
+
+      function formatTimeParts(ms, precision = state.precision) {
+        const safeMs = Math.max(0, Math.floor(ms));
+        const totalSeconds = Math.floor(safeMs / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const remainderMs = safeMs % 1000;
+
+        const mainBase = hours > 0
+          ? `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`
+          : `${pad2(minutes)}:${pad2(seconds)}`;
+
+        let fraction = '';
+        if (precision === 'centi') {
+          fraction = '.' + pad2(Math.floor(remainderMs / 10));
+        } else if (precision === 'milli') {
+          fraction = '.' + pad3(remainderMs);
+        }
+
+        return {
+          mainBase,
+          fraction,
+          fullText: mainBase + fraction,
+          hours,
+        };
+      }
+
+      function formatSignedDelta(deltaMs) {
+        const sign = deltaMs > 0 ? '+' : deltaMs < 0 ? '-' : '±';
+        const formatted = formatTimeParts(Math.abs(deltaMs), state.precision).fullText;
+        return `${sign}${formatted}`;
+      }
+
+      // ===================================================================
+      // TOAST NOTIFICATIONS (Zero alert()/confirm())
+      // ===================================================================
+      function showToast(message, variant = 'cyan') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        const accentClasses = variant === 'coral'
+          ? 'border-coralpulse-400/40 text-coralpulse-400'
+          : 'border-cyanpulse-400/40 text-cyanpulse-400';
+
+        toast.className = `pointer-events-auto glass-panel rounded-xl px-4 py-3 text-xs sm:text-sm font-medium shadow-2xl border ${accentClasses} flex items-center justify-between gap-3 transition-all duration-200`;
+        toast.innerHTML = `
+          <span class="text-ice-50">${escapeHtml(message)}</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider opacity-80">OK</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(6px)';
+          setTimeout(() => toast.remove(), 220);
+        }, 2600);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // ===================================================================
+      // MODE SWITCHING & PRECISION FILTER
+      // ===================================================================
+      window.switchMode = function (newMode) {
+        if (state.mode === newMode) return;
+        state.mode = newMode;
+
+        // Update Tab UI
+        document.querySelectorAll('.mode-tab').forEach((btn) => {
+          btn.classList.remove('bg-cyanpulse-500', 'text-carbon-950', 'shadow-md');
+          btn.classList.add('text-ice-400');
+          btn.setAttribute('aria-selected', 'false');
+        });
+        const activeTab = document.getElementById(`tab-${newMode}`);
+        if (activeTab) {
+          activeTab.classList.add('bg-cyanpulse-500', 'text-carbon-950', 'shadow-md');
+          activeTab.classList.remove('text-ice-400');
+          activeTab.setAttribute('aria-selected', 'true');
+        }
+
+        // Show/Hide Mode Config Panels
+        els.panelCdConfig.classList.toggle('hidden', newMode !== 'countdown');
+        els.panelHiitConfig.classList.toggle('hidden', newMode !== 'interval');
+
+        // Configure mode-specific labels
+        if (newMode === 'stopwatch') {
+          els.subTop.textContent = 'OVERALL ELAPSED';
+          els.secondaryWrap.classList.remove('hidden');
+          els.splitBarWrap.classList.remove('hidden');
+          els.roundBadge.classList.add('hidden');
+          els.labelLapAction.textContent = 'Lap / Split';
+          els.progressRing.setAttribute('stroke', '#22d3ee');
+        } else if (newMode === 'countdown') {
+          els.subTop.textContent = 'TIME REMAINING';
+          els.secondaryWrap.classList.add('hidden');
+          els.splitBarWrap.classList.add('hidden');
+          els.roundBadge.classList.add('hidden');
+          els.labelLapAction.textContent = '+1 Min';
+          els.progressRing.setAttribute('stroke', '#22d3ee');
+        } else if (newMode === 'interval') {
+          els.subTop.textContent = `${state.hiitPhase} PHASE REMAINING`;
+          els.secondaryWrap.classList.add('hidden');
+          els.splitBarWrap.classList.add('hidden');
+          els.roundBadge.classList.remove('hidden');
+          els.labelLapAction.textContent = 'Next Phase';
+        }
+
+        syncControlsUI();
+        renderFrame();
+      };
+
+      document.getElementById('precision-select').addEventListener('change', function (e) {
+        state.precision = e.target.value;
+        renderFrame();
+        updateLapStats();
+        renderLapTable();
+      });
+
+      // ===================================================================
+      // CORE TIMING ACTIONS (START / PAUSE / LAP / RESET)
+      // ===================================================================
+      function isModeRunning() {
+        if (state.mode === 'stopwatch') return state.swRunning;
+        if (state.mode === 'countdown') return state.cdRunning;
+        if (state.mode === 'interval') return state.hiitRunning;
+        return false;
+      }
+
+      window.toggleStartPause = function () {
+        getAudioContext();
+        const now = performance.now();
+
+        if (state.mode === 'stopwatch') {
+          if (!state.swRunning) {
+            state.swStartPerf = now;
+            state.swRunning = true;
+            playCue('start');
+          } else {
+            state.swAccumulatedMs += now - state.swStartPerf;
+            state.swRunning = false;
+            playCue('pause');
+          }
+        } else if (state.mode === 'countdown') {
+          if (state.cdRemainingMs <= 0) {
+            state.cdRemainingMs = state.cdDurationMs;
+            state.cdCompleted = false;
+          }
+          if (!state.cdRunning) {
+            state.cdEndPerf = now + state.cdRemainingMs;
+            state.cdRunning = true;
+            state.cdCompleted = false;
+            playCue('start');
+          } else {
+            state.cdRemainingMs = Math.max(0, state.cdEndPerf - now);
+            state.cdRunning = false;
+            playCue('pause');
+          }
+        } else if (state.mode === 'interval') {
+          if (state.hiitPhase === 'DONE') {
+            resetIntervalState();
+          }
+          if (!state.hiitRunning) {
+            state.hiitPhaseEndPerf = now + state.hiitPhaseRemainingMs;
+            state.hiitRunning = true;
+            playCue('start');
+          } else {
+            state.hiitPhaseRemainingMs = Math.max(0, state.hiitPhaseEndPerf - now);
+            state.hiitRunning = false;
+            playCue('pause');
+          }
+        }
+
+        syncControlsUI();
+        startLoopIfNeeded();
+        renderFrame();
+      };
+
+      window.handleLapOrPhaseAction = function () {
+        getAudioContext();
+        const now = performance.now();
+
+        if (state.mode === 'stopwatch') {
+          const totalMs = getStopwatchTotalMs(now);
+          if (totalMs <= 0 && !state.swRunning) {
+            showToast('Start the stopwatch first to record laps.', 'coral');
+            return;
+          }
+          const lapMs = Math.max(0, totalMs - state.swLastLapTotalMs);
+          state.swLastLapTotalMs = totalMs;
+
+          const rawNote = els.lapNoteInput.value.trim();
+          const lapNum = state.laps.length + 1;
+          const label = rawNote || `Split ${lapNum}`;
+          els.lapNoteInput.value = '';
+
+          state.laps.push({
+            id: Date.now() + Math.random(),
+            number: lapNum,
+            label,
+            lapMs,
+            splitMs: totalMs,
+            flagged: false,
+          });
+
+          playCue('lap');
+          updateLapStats();
+          renderLapTable();
+          renderFrame();
+        } else if (state.mode === 'countdown') {
+          // Add +60 seconds quick boost
+          const addMs = 60 * 1000;
+          state.cdDurationMs += addMs;
+          if (state.cdRunning) {
+            state.cdEndPerf += addMs;
+          } else {
+            state.cdRemainingMs += addMs;
+          }
+          state.cdCompleted = false;
+          playCue('lap');
+          showToast('Added +1 minute to countdown.', 'cyan');
+          renderFrame();
+        } else if (state.mode === 'interval') {
+          if (state.hiitPhase === 'DONE') return;
+          advanceIntervalPhase(now, true);
+          renderFrame();
+        }
+      };
+
+      window.resetTimer = function () {
+        if (state.mode === 'stopwatch') {
+          state.swRunning = false;
+          state.swStartPerf = 0;
+          state.swAccumulatedMs = 0;
+          state.swLastLapTotalMs = 0;
+          state.laps = [];
+          updateLapStats();
+          renderLapTable();
+        } else if (state.mode === 'countdown') {
+          state.cdRunning = false;
+          state.cdRemainingMs = state.cdDurationMs;
+          state.cdCompleted = false;
+        } else if (state.mode === 'interval') {
+          resetIntervalState();
+        }
+
+        syncControlsUI();
+        renderFrame();
+        showToast('Chronometer reset.', 'cyan');
+      };
+
+      // ===================================================================
+      // COUNTDOWN & INTERVAL HELPERS
+      // ===================================================================
+      window.applyCountdownPreset = function (seconds) {
+        const ms = Math.max(1000, seconds * 1000);
+        state.cdRunning = false;
+        state.cdDurationMs = ms;
+        state.cdRemainingMs = ms;
+        state.cdCompleted = false;
+
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        document.getElementById('cd-hours').value = hrs;
+        document.getElementById('cd-minutes').value = mins;
+        document.getElementById('cd-seconds').value = secs;
+
+        syncControlsUI();
+        renderFrame();
+        showToast(`Countdown set to ${formatTimeParts(ms, 'seconds').fullText}`, 'cyan');
+      };
+
+      window.applyCustomCountdown = function () {
+        const h = Math.max(0, Math.min(99, parseInt(document.getElementById('cd-hours').value, 10) || 0));
+        const m = Math.max(0, Math.min(59, parseInt(document.getElementById('cd-minutes').value, 10) || 0));
+        const s = Math.max(0, Math.min(59, parseInt(document.getElementById('cd-seconds').value, 10) || 0));
+        const totalSec = h * 3600 + m * 60 + s;
+        if (totalSec <= 0) {
+          showToast('Please enter at least 1 second.', 'coral');
+          return;
+        }
+        applyCountdownPreset(totalSec);
+      };
+
+      window.applyIntervalPreset = function (workSec, restSec, rounds) {
+        document.getElementById('hiit-work-sec').value = workSec;
+        document.getElementById('hiit-rest-sec').value = restSec;
+        document.getElementById('hiit-rounds').value = rounds;
+        applyIntervalConfig();
+      };
+
+      window.applyIntervalConfig = function () {
+        const workSec = Math.max(3, Math.min(3600, parseInt(document.getElementById('hiit-work-sec').value, 10) || 40));
+        const restSec = Math.max(0, Math.min(3600, parseInt(document.getElementById('hiit-rest-sec').value, 10) || 20));
+        const rounds = Math.max(1, Math.min(99, parseInt(document.getElementById('hiit-rounds').value, 10) || 8));
+
+        state.hiitWorkMs = workSec * 1000;
+        state.hiitRestMs = restSec * 1000;
+        state.hiitTotalRounds = rounds;
+        resetIntervalState();
+        syncControlsUI();
+        renderFrame();
+        showToast(`HIIT set: ${workSec}s Work / ${restSec}s Rest × ${rounds} Rounds`, 'coral');
+      };
+
+      function resetIntervalState() {
+        state.hiitRunning = false;
+        state.hiitCurrentRound = 1;
+        state.hiitPhase = 'WORK';
+        state.hiitPhaseDurationMs = state.hiitWorkMs;
+        state.hiitPhaseRemainingMs = state.hiitWorkMs;
+      }
+
+      function advanceIntervalPhase(now, manualSkip = false) {
+        if (state.hiitPhase === 'WORK') {
+          if (state.hiitRestMs > 0) {
+            state.hiitPhase = 'REST';
+            state.hiitPhaseDurationMs = state.hiitRestMs;
+            state.hiitPhaseRemainingMs = state.hiitRestMs;
+            state.hiitPhaseEndPerf = now + state.hiitRestMs;
+            playCue('phase');
+          } else {
+            // No rest configured -> jump straight to next round
+            goNextHiitRound(now);
+          }
+        } else if (state.hiitPhase === 'REST') {
+          goNextHiitRound(now);
+        }
+        if (manualSkip && !state.hiitRunning) {
+          state.hiitPhaseRemainingMs = state.hiitPhaseDurationMs;
+        }
+      }
+
+      function goNextHiitRound(now) {
+        if (state.hiitCurrentRound < state.hiitTotalRounds) {
+          state.hiitCurrentRound += 1;
+          state.hiitPhase = 'WORK';
+          state.hiitPhaseDurationMs = state.hiitWorkMs;
+          state.hiitPhaseRemainingMs = state.hiitWorkMs;
+          state.hiitPhaseEndPerf = now + state.hiitWorkMs;
+          playCue('phase');
+        } else {
+          state.hiitPhase = 'DONE';
+          state.hiitRunning = false;
+          state.hiitPhaseRemainingMs = 0;
+          syncControlsUI();
+          playCue('complete');
+          showToast('HIIT session complete! Great work.', 'cyan');
+        }
+      }
+
+      // ===================================================================
+      // RENDERING & ANIMATION LOOP
+      // ===================================================================
+      function getStopwatchTotalMs(now) {
+        return state.swRunning
+          ? state.swAccumulatedMs + (now - state.swStartPerf)
+          : state.swAccumulatedMs;
+      }
+
+      function syncControlsUI() {
+        const running = isModeRunning();
+        els.iconPlay.classList.toggle('hidden', running);
+        els.iconPause.classList.toggle('hidden', !running);
+        els.labelStartPause.textContent = running ? 'Pause' : 'Start';
+
+        if (running) {
+          els.btnStartPause.classList.remove('from-cyanpulse-500', 'to-cyanpulse-400', 'shadow-cyanpulse-500/25');
+          els.btnStartPause.classList.add('from-coralpulse-500', 'to-coralpulse-400', 'shadow-coralpulse-500/25');
+        } else {
+          els.btnStartPause.classList.add('from-cyanpulse-500', 'to-cyanpulse-400', 'shadow-cyanpulse-500/25');
+          els.btnStartPause.classList.remove('from-coralpulse-500', 'to-coralpulse-400', 'shadow-coralpulse-500/25');
+        }
+      }
+
+      function setRingProgress(fractionZeroToOne, strokeColor) {
+        const clamped = Math.max(0, Math.min(1, fractionZeroToOne));
+        const offset = RING_CIRCUMFERENCE * (1 - clamped);
+        els.progressRing.style.strokeDashoffset = offset.toFixed(2);
+        if (strokeColor) {
+          els.progressRing.setAttribute('stroke', strokeColor);
+        }
+      }
+
+      function updateDigitalDisplay(ms, accentClass = 'text-cyanpulse-400') {
+        const parts = formatTimeParts(ms, state.precision);
+        const sizeClass = parts.hours > 0
+          ? 'text-3xl sm:text-4xl'
+          : 'text-4xl sm:text-5xl';
+        els.mainDisplay.className = `tabular-readout font-bold ${sizeClass} tracking-tight text-ice-50 leading-none`;
+
+        if (parts.fraction) {
+          els.mainDisplay.innerHTML = `${parts.mainBase}<span class="${accentClass} text-2xl sm:text-3xl">${parts.fraction}</span>`;
+        } else {
+          els.mainDisplay.textContent = parts.mainBase;
+        }
+      }
+
+      function renderFrame() {
+        const now = performance.now();
+
+        if (state.mode === 'stopwatch') {
+          const totalMs = getStopwatchTotalMs(now);
+          const currentLapMs = Math.max(0, totalMs - state.swLastLapTotalMs);
+
+          updateDigitalDisplay(totalMs, 'text-cyanpulse-400');
+          els.currentLapTime.textContent = formatTimeParts(currentLapMs, state.precision).fullText;
+
+          // Sweep 60-second dial cycle
+          const secondSweep = (totalMs % 60000) / 60000;
+          setRingProgress(totalMs === 0 ? 0 : secondSweep, '#22d3ee');
+
+          // Split ratio bar
+          const ratioPct = totalMs > 0 ? Math.min(100, Math.round((currentLapMs / totalMs) * 100)) : 0;
+          els.splitRatioLabel.textContent = `${ratioPct}% OF TOTAL ELAPSED`;
+          els.splitRatioBar.style.width = `${ratioPct}%`;
+
+          els.modeBadge.textContent = state.swRunning
+            ? 'STOPWATCH • RUNNING'
+            : totalMs > 0 ? 'STOPWATCH • PAUSED' : 'STOPWATCH • READY';
+          els.modeBadge.className = state.swRunning
+            ? 'px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-cyanpulse-500/20 text-cyanpulse-400 border border-cyanpulse-400/40'
+            : 'px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-ice-50/[0.06] text-ice-200 border border-ice-50/15';
+        } else if (state.mode === 'countdown') {
+          let rem = state.cdRemainingMs;
+          if (state.cdRunning) {
+            rem = Math.max(0, state.cdEndPerf - now);
+            state.cdRemainingMs = rem;
+            if (rem === 0 && !state.cdCompleted) {
+              state.cdRunning = false;
+              state.cdCompleted = true;
+              syncControlsUI();
+              playCue('complete');
+              showToast('Countdown complete!', 'coral');
+            }
+          }
+
+          const isLow = rem > 0 && rem <= 10000;
+          updateDigitalDisplay(rem, isLow || state.cdCompleted ? 'text-coralpulse-400' : 'text-cyanpulse-400');
+          const ratio = state.cdDurationMs > 0 ? rem / state.cdDurationMs : 0;
+          setRingProgress(ratio, isLow || state.cdCompleted ? '#f97316' : '#22d3ee');
+
+          els.modeBadge.textContent = state.cdCompleted
+            ? 'COUNTDOWN • COMPLETE'
+            : state.cdRunning ? 'COUNTDOWN • ACTIVE' : 'COUNTDOWN • STANDBY';
+        } else if (state.mode === 'interval') {
+          let rem = state.hiitPhaseRemainingMs;
+          if (state.hiitRunning) {
+            rem = Math.max(0, state.hiitPhaseEndPerf - now);
+            state.hiitPhaseRemainingMs = rem;
+            if (rem === 0) {
+              advanceIntervalPhase(now, false);
+              rem = state.hiitPhaseRemainingMs;
+            }
+          }
+
+          const isRest = state.hiitPhase === 'REST';
+          const isDone = state.hiitPhase === 'DONE';
+          els.subTop.textContent = isDone ? 'WORKOUT COMPLETE' : `${state.hiitPhase} PHASE REMAINING`;
+          els.roundBadge.textContent = `ROUND ${state.hiitCurrentRound} / ${state.hiitTotalRounds}`;
+
+          updateDigitalDisplay(rem, isRest || isDone ? 'text-coralpulse-400' : 'text-cyanpulse-400');
+          const ratio = state.hiitPhaseDurationMs > 0 ? rem / state.hiitPhaseDurationMs : 0;
+          setRingProgress(isDone ? 0 : ratio, isRest || isDone ? '#f97316' : '#22d3ee');
+
+          els.modeBadge.textContent = isDone
+            ? 'HIIT • FINISHED'
+            : `HIIT • ${state.hiitPhase}`;
+          els.modeBadge.className = isRest
+            ? 'px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-coralpulse-500/20 text-coralpulse-400 border border-coralpulse-400/40'
+            : 'px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-cyanpulse-500/20 text-cyanpulse-400 border border-cyanpulse-400/40';
+        }
+      }
+
+      function tickLoop() {
+        renderFrame();
+        if (isModeRunning()) {
+          state.rafId = requestAnimationFrame(tickLoop);
+        } else {
+          state.rafId = null;
+        }
+      }
+
+      function startLoopIfNeeded() {
+        if (!state.rafId && isModeRunning()) {
+          state.rafId = requestAnimationFrame(tickLoop);
+        }
+      }
+
+      // Immediately recalculate when returning to tab
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          renderFrame();
+        }
+      });
+
+      // ===================================================================
+      // LAP STATISTICS, TABLE FILTERING & SORTING
+      // ===================================================================
+      function getLapExtremes() {
+        if (state.laps.length < 2) return { minLap: null, maxLap: null, avgMs: null };
+        let minLap = state.laps[0];
+        let maxLap = state.laps[0];
+        let sum = 0;
+
+        for (const lap of state.laps) {
+          sum += lap.lapMs;
+          if (lap.lapMs < minLap.lapMs) minLap = lap;
+          if (lap.lapMs > maxLap.lapMs) maxLap = lap;
+        }
+        return {
+          minLap,
+          maxLap,
+          avgMs: sum / state.laps.length,
+        };
+      }
+
+      function updateLapStats() {
+        const count = state.laps.length;
+        els.statTotalLaps.textContent = `${count} recorded ${count === 1 ? 'split' : 'splits'}`;
+
+        if (count < 2) {
+          els.statFastest.textContent = count === 1 ? formatTimeParts(state.laps[0].lapMs).fullText : '—';
+          els.statFastestLabel.textContent = count === 1 ? 'Lap #1 (need 2+ to compare)' : 'Needs 2+ laps';
+          els.statSlowest.textContent = '—';
+          els.statSlowestLabel.textContent = 'Needs 2+ laps';
+          els.statAverage.textContent = count === 1 ? formatTimeParts(state.laps[0].lapMs).fullText : '—';
+          return;
+        }
+
+        const { minLap, maxLap, avgMs } = getLapExtremes();
+        els.statFastest.textContent = formatTimeParts(minLap.lapMs).fullText;
+        els.statFastestLabel.textContent = `Lap #${minLap.number} • ${minLap.label}`;
+
+        els.statSlowest.textContent = formatTimeParts(maxLap.lapMs).fullText;
+        els.statSlowestLabel.textContent = `Lap #${maxLap.number} • ${maxLap.label}`;
+
+        els.statAverage.textContent = formatTimeParts(avgMs).fullText;
+      }
+
+      window.toggleLapFlag = function (lapId) {
+        const target = state.laps.find((l) => l.id === lapId);
+        if (target) {
+          target.flagged = !target.flagged;
+          renderLapTable();
+        }
+      };
+
+      window.renderLapTable = function () {
+        const filterMode = els.lapFilterSelect.value;
+        const sortMode = els.lapSortSelect.value;
+        const query = els.lapSearchInput.value.trim().toLowerCase();
+        const { minLap, maxLap, avgMs } = getLapExtremes();
+
+        let filtered = state.laps.filter((lap) => {
+          if (filterMode === 'flagged' && !lap.flagged) return false;
+          if (filterMode === 'extremes') {
+            if (!minLap || !maxLap) return true;
+            if (lap.id !== minLap.id && lap.id !== maxLap.id) return false;
+          }
+          if (query) {
+            const matchLabel = lap.label.toLowerCase().includes(query);
+            const matchNum = `lap ${lap.number}`.includes(query) || String(lap.number) === query;
+            if (!matchLabel && !matchNum) return false;
+          }
+          return true;
+        });
+
+        filtered.sort((a, b) => {
+          if (sortMode === 'newest') return b.number - a.number;
+          if (sortMode === 'oldest') return a.number - b.number;
+          if (sortMode === 'fastest') return a.lapMs - b.lapMs;
+          if (sortMode === 'slowest') return b.lapMs - a.lapMs;
+          return b.number - a.number;
+        });
+
+        if (filtered.length === 0) {
+          els.lapTableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="py-10 px-4 text-center text-ice-500 text-xs sm:text-sm">
+                ${state.laps.length === 0
+                  ? 'No laps recorded yet. Start the stopwatch and press <strong class="text-ice-200">Lap / Split</strong> (or hit <kbd class="font-mono text-cyanpulse-400">L</kbd>).'
+                  : 'No laps match your current filter or search query.'}
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        els.lapTableBody.innerHTML = filtered.map((lap) => {
+          const isFastest = minLap && lap.id === minLap.id && minLap.id !== maxLap.id;
+          const isSlowest = maxLap && lap.id === maxLap.id && minLap.id !== maxLap.id;
+
+          let badgeHtml = '';
+          let rowBg = 'hover:bg-ice-50/[0.03]';
+          if (isFastest) {
+            badgeHtml = '<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyanpulse-500/20 text-cyanpulse-400 border border-cyanpulse-400/35">FASTEST</span>';
+            rowBg = 'bg-cyanpulse-500/[0.04] hover:bg-cyanpulse-500/[0.07]';
+          } else if (isSlowest) {
+            badgeHtml = '<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-coralpulse-500/20 text-coralpulse-400 border border-coralpulse-400/35">SLOWEST</span>';
+            rowBg = 'bg-coralpulse-500/[0.04] hover:bg-coralpulse-500/[0.07]';
+          }
+
+          const deltaText = avgMs !== null ? formatSignedDelta(lap.lapMs - avgMs) : '—';
+          const deltaColor = avgMs !== null
+            ? (lap.lapMs < avgMs ? 'text-cyanpulse-400' : lap.lapMs > avgMs ? 'text-coralpulse-400' : 'text-ice-400')
+            : 'text-ice-500';
+
+          return `
+            <tr class="${rowBg} transition-colors">
+              <td class="py-3 px-3.5 text-center">
+                <button type="button" onclick="toggleLapFlag(${lap.id})" aria-label="Toggle Flag for Lap ${lap.number}"
+                  class="text-base leading-none transition-transform hover:scale-125 cursor-pointer ${lap.flagged ? 'text-coralpulse-400' : 'text-ice-500/40 hover:text-ice-300'}">
+                  ${lap.flagged ? '★' : '☆'}
+                </button>
+              </td>
+              <td class="py-3 px-3.5 font-mono font-semibold text-ice-200">#${pad2(lap.number)}</td>
+              <td class="py-3 px-3.5 text-ice-50 font-medium">
+                <span>${escapeHtml(lap.label)}</span>${badgeHtml}
+              </td>
+              <td class="py-3 px-3.5 tabular-readout font-bold text-ice-50">${formatTimeParts(lap.lapMs).fullText}</td>
+              <td class="py-3 px-3.5 tabular-readout text-ice-400">${formatTimeParts(lap.splitMs).fullText}</td>
+              <td class="py-3 px-3.5 tabular-readout text-right font-medium ${deltaColor}">${deltaText}</td>
+            </tr>
+          `;
+        }).join('');
+      };
+
+      window.clearLapsOnly = function () {
+        if (state.laps.length === 0) return;
+        state.laps = [];
+        state.swLastLapTotalMs = getStopwatchTotalMs(performance.now());
+        updateLapStats();
+        renderLapTable();
+        showToast('Lap table cleared.', 'cyan');
+      };
+
+      // ===================================================================
+      // EXPORT (CSV & CLIPBOARD)
+      // ===================================================================
+      window.exportLapsCSV = function () {
+        if (state.laps.length === 0) {
+          showToast('Record at least one lap before exporting CSV.', 'coral');
+          return;
+        }
+        const { avgMs } = getLapExtremes();
+        const header = ['Lap #', 'Flagged', 'Label', 'Lap Time', 'Overall Split', 'Delta vs Average'];
+        const rows = state.laps.map((lap) => [
+          lap.number,
+          lap.flagged ? 'Yes' : 'No',
+          `"${lap.label.replace(/"/g, '""')}"`,
+          formatTimeParts(lap.lapMs).fullText,
+          formatTimeParts(lap.splitMs).fullText,
+          avgMs !== null ? formatSignedDelta(lap.lapMs - avgMs) : '0.00',
+        ]);
+
+        const csvContent = [header.join(','), ...rows.map((r) => r.join(','))].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Stopwatch-splits-${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('CSV file downloaded.', 'cyan');
+      };
+
+      window.copyLapsToClipboard = function () {
+        if (state.laps.length === 0) {
+          showToast('No laps available to copy.', 'coral');
+          return;
+        }
+        const lines = ['Stopwatch / TIMER — Session Splits', '----------------------------------------'];
+        state.laps.forEach((lap) => {
+          const star = lap.flagged ? '[★] ' : '';
+          lines.push(
+            `Lap ${pad2(lap.number)} | ${star}${lap.label} | Lap: ${formatTimeParts(lap.lapMs).fullText} | Split: ${formatTimeParts(lap.splitMs).fullText}`
+          );
+        });
+
+        const textArea = document.createElement('textarea');
+        textArea.value = lines.join('\n');
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          showToast('Splits copied to clipboard!', 'cyan');
+        } catch (err) {
+          showToast('Unable to copy splits.', 'coral');
+        }
+        document.body.removeChild(textArea);
+      };
+
+      // ===================================================================
+      // LOCAL SESSION ARCHIVE (localStorage)
+      // ===================================================================
+      function loadSavedSessions() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_SESSIONS);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function persistSavedSessions(list) {
+        try {
+          localStorage.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(list));
+        } catch (e) {
+          // Ignore storage quota errors
+        }
+      }
+
+      window.saveCurrentSession = function () {
+        const now = performance.now();
+        const customTitle = els.lapNoteInput.value.trim();
+        let durationMs = 0;
+        let summary = '';
+
+        if (state.mode === 'stopwatch') {
+          durationMs = getStopwatchTotalMs(now);
+          if (durationMs <= 0 && state.laps.length === 0) {
+            showToast('Run the stopwatch first to save a session.', 'coral');
+            return;
+          }
+          summary = `${state.laps.length} ${state.laps.length === 1 ? 'lap' : 'laps'} recorded`;
+        } else if (state.mode === 'countdown') {
+          durationMs = state.cdDurationMs;
+          summary = `Target ${formatTimeParts(state.cdDurationMs, 'seconds').fullText}`;
+        } else if (state.mode === 'interval') {
+          durationMs = (state.hiitWorkMs + state.hiitRestMs) * state.hiitTotalRounds;
+          summary = `${state.hiitTotalRounds} rounds (${state.hiitWorkMs / 1000}s / ${state.hiitRestMs / 1000}s)`;
+        }
+
+        const sessions = loadSavedSessions();
+        sessions.unshift({
+          id: Date.now(),
+          mode: state.mode,
+          title: customTitle || `${state.mode.charAt(0).toUpperCase() + state.mode.slice(1)} Session`,
+          durationText: formatTimeParts(durationMs, state.precision).fullText,
+          summary,
+          createdAt: new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        });
+
+        persistSavedSessions(sessions.slice(0, 30));
+        els.lapNoteInput.value = '';
+        renderSessionArchive();
+        showToast('Session saved to local browser archive.', 'cyan');
+      };
+
+      window.deleteSavedSession = function (id) {
+        const updated = loadSavedSessions().filter((s) => s.id !== id);
+        persistSavedSessions(updated);
+        renderSessionArchive();
+      };
+
+      window.clearSavedSessions = function () {
+        persistSavedSessions([]);
+        renderSessionArchive();
+        showToast('Session archive cleared.', 'cyan');
+      };
+
+      window.renderSessionArchive = function () {
+        const filter = els.archiveFilterSelect.value;
+        const sessions = loadSavedSessions().filter((s) => filter === 'all' || s.mode === filter);
+
+        if (sessions.length === 0) {
+          els.archiveList.innerHTML = `
+            <div class="col-span-full py-6 px-4 rounded-2xl bg-carbon-950/60 border border-ice-50/[0.06] text-center text-xs text-ice-500">
+              No archived sessions for this filter. Click <strong class="text-ice-200">Save Session</strong> after any timing run to store it here.
+            </div>
+          `;
+          return;
+        }
+
+        els.archiveList.innerHTML = sessions.map((s) => {
+          const badgeColor = s.mode === 'interval'
+            ? 'bg-coralpulse-500/15 text-coralpulse-400 border-coralpulse-400/30'
+            : 'bg-cyanpulse-500/15 text-cyanpulse-400 border-cyanpulse-400/30';
+          return `
+            <div class="p-4 rounded-2xl bg-carbon-950/80 border border-ice-50/[0.08] flex flex-col justify-between gap-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono uppercase border ${badgeColor}">${escapeHtml(s.mode)}</span>
+                  <h4 class="font-display font-bold text-sm text-ice-50 mt-1.5">${escapeHtml(s.title)}</h4>
+                </div>
+                <button type="button" onclick="deleteSavedSession(${s.id})" aria-label="Delete Saved Session"
+                  class="text-xs text-ice-500 hover:text-coralpulse-400 px-1.5 py-0.5 rounded cursor-pointer">✕</button>
+              </div>
+              <div class="flex items-baseline justify-between pt-2 border-t border-ice-50/[0.06]">
+                <span class="tabular-readout font-bold text-base text-ice-50">${escapeHtml(s.durationText)}</span>
+                <span class="text-[11px] text-ice-400">${escapeHtml(s.summary)} • ${escapeHtml(s.createdAt)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      // ===================================================================
+      // KEYBOARD SHORTCUTS (Space / L / R)
+      // ===================================================================
+      document.addEventListener('keydown', function (e) {
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) {
+          return;
+        }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          toggleStartPause();
+        } else if (e.key === 'l' || e.key === 'L') {
+          e.preventDefault();
+          handleLapOrPhaseAction();
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          resetTimer();
+        }
+      });
+
+      // ===================================================================
+      // FAQ ACCORDION TOGGLE
+      // ===================================================================
+      window.toggleFaq = function (btn) {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.getAttribute('data-open') === 'true';
+        item.setAttribute('data-open', String(!isOpen));
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      };
+
+      // Initial Render
+      renderFrame();
+      updateLapStats();
+      renderLapTable();
+      renderSessionArchive();
+    })();
+  </script>
+</body>
+</html>
